@@ -35,6 +35,24 @@ MAKEFLAGS += -rR --no-print-directory
 # To put more focus on warnings, be less verbose as default
 # Use 'make V=1' to see the full commands
 
+#	****************知识点补充*************************
+#origin->获取此变量（参数）相关的信息，告诉我们这个变量的出处（定义方式） 。
+#origin函数的返回情况有以下几种：
+#	undefined 	变量“VARIABLE”没有被定义。
+#	default 	变量 “VARIABLE” 是一个默认定义（内嵌变量）。如“CC”、“MAKE”、“RM”等变量
+#	environment 变量 “VARIABLE” 是一个系统环境变量， 并且make没有使用命令行选项 “-e”
+#	environment override 变量“VARIABLE”是一个系统环境变量，并且make使用了命令行选项“-e” 。
+#		Makefile中存在一个同名的变量定义，使用“make -e”时环境变量值替代了#		文件中的变量定义。
+#	file		变量“VARIABLE”在某一个 makefile 文件中定义。 
+#	command line 变量“VARIABLE”在命令行中定义。
+#	override 	变量“VARIABLE”在 makefile 文件中定义并使用“override”指示符声明。
+#	automatic	变量“VARIABLE”是自动化变量。
+
+
+#ifeq->条件判断，ìfeq (ARG1, ARG2)替换展开“ARG1”和“ARG1”后，对它们的值进行比较。如果相同则（条件为
+#真），则执行下面的语句，否则执行else的另外分支
+
+#"$(origin V)"即为在寻找V的出处，使用ifeq来判断V是否是来着命令行的，如果是，则KBUILD_VERBOSE值为V的内容
 ifeq ("$(origin V)", "command line")
   KBUILD_VERBOSE = $(V)
 endif
@@ -100,6 +118,9 @@ endif
 PHONY := _all
 _all:
 
+#$(CURDIR)->环境变量，此变量代表 make 的工作目录。当使用“-C”选项进入一个子目录后，此变量将被重新赋值。   $(MAKE) -C
+
+#定义一个空命令，空命令行可以防止make在执行时试图为重建这个目标去查找隐含命令（包括了使用隐含规则中的命令和“.DEFAULT”指定的命令
 # Cancel implicit rules on top Makefile
 $(CURDIR)/Makefile Makefile: ;
 
